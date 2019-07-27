@@ -2,9 +2,14 @@ package com.incaze.friendscheckervk
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.GeneratedAdapter
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.app.Dialog
+import android.content.Intent
+import android.widget.TextView
+
+
 
 /*
 import com.vk.api.sdk.VK
@@ -18,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var user: List<User>
     private lateinit var userAdapter: UserAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupRecyclerView()
 
-        //VK.login(MainActivity, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
     }
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.activity_main_rv_users)
@@ -35,6 +38,11 @@ class MainActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = linearLayoutManager
     }
+
+    fun startAddUser(view: View){
+        startActivity(Intent(this, AddUser::class.java))
+    }
+
 
     /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val callback = object: VKAuthCallback {
