@@ -8,7 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import android.app.Dialog
 import android.content.Intent
 import android.widget.TextView
-
+import android.app.Activity
+import android.graphics.Bitmap
+import com.vk.api.sdk.ui.VKConfirmationActivity.Companion.result
+import android.graphics.BitmapFactory
+import android.util.Log
+import android.widget.ImageView
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.auth.VKAccessToken
+import com.vk.api.sdk.auth.VKAuthCallback
+import com.vk.api.sdk.auth.VKScope
+import java.net.URL
 
 
 /*
@@ -21,16 +31,59 @@ import com.vk.api.sdk.auth.VKAuthCallback
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var user: List<User>
+    private val errorTAG = "MainActivity_Error"
+    lateinit var user: List<User>
     private lateinit var userAdapter: UserAdapter
+    private val REQUEST_CODE = 0
+   // var userList = arrayListOf<User>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        user = generateMovieList()
+        VK.initialize(this)
+       if (!VK.isLoggedIn()) {
+           VK.login(this, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
+       }
+        user = generateUserList()
         setContentView(R.layout.activity_main)
         setupRecyclerView()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val callback = object: VKAuthCallback {
+            override fun onLogin(token: VKAccessToken) {
+                when (requestCode) {
+                    REQUEST_CODE -> {
+                        if (resultCode == Activity.RESULT_OK) {
+                            val idUser = data!!.getStringExtra("idUser")
+                            val firstName = data!!.getStringExtra("firstName")
+                            val secondName = data!!.getStringExtra("secondName")
+                            val photoURL = URL(data!!.getStringExtra("photoURL"))
+                            val photo: Bitmap = BitmapFactory.decodeStream(photoURL.openConnection().getInputStream())
+                            //myImageView.setImageBitmap(mIcon_val)
+                            //  findViewById(R.id.user_photo).setImageBitmap(photo)
+                            /* val photoView = findViewById<ImageView>(R.id.user_photo)
+                             userList.add(
+                                 User(
+                                     firstName!!,
+                                     secondName!!,
+                                     photoView.setImageBitmap(photo)
+                                 )
+                             )*/
+                        }
+
+                    }
+                }
+            }
+            override fun onLoginFailed(errorCode: Int) {
+                Log.e(errorTAG, errorCode.toString())
+            }
+        }
+        if (data == null || !VK.onActivityResult(requestCode, resultCode, data, callback)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
 
     }
+
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.activity_main_rv_users)
         userAdapter = UserAdapter(user)
@@ -40,26 +93,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startAddUser(view: View){
-        startActivity(Intent(this, AddUser::class.java))
+        val intent = Intent(this, AddUser::class.java)
+        startActivityForResult(intent, REQUEST_CODE)
     }
 
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val callback = object: VKAuthCallback {
-            override fun onLogin(token: VKAccessToken) {
-                // User passed authorization
-            }
-
-            override fun onLoginFailed(errorCode: Int) {
-                // User didn't pass authorization
-            }
-        }
-        if (data == null || !VK.onActivityResult(requestCode, resultCode, data, callback)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }*/
-
-    private fun generateMovieList() : List<User>{
+    private fun generateUserList() : List<User>{
        val user = arrayListOf<User>()
         user.add(
             User(
@@ -68,41 +106,7 @@ class MainActivity : AppCompatActivity() {
                 R.drawable.photo_1
             )
         )
-        user.add(
-            User(
-                "Мишка",
-                "Дураков",
-                R.drawable.photo_2
-            )
-        )
-        user.add(
-            User(
-                "Алексей",
-                "Михалков",
-                R.drawable.photo_1
-            )
-        )
-        user.add(
-            User(
-                "Петр",
-                "Кексов",
-                R.drawable.photo_2
-            )
-        )
-        user.add(
-            User(
-                "Рачок",
-                "Курага",
-                R.drawable.photo_1
-            )
-        )
-        user.add(
-            User(
-                "Кулачок",
-                "Претопов",
-                R.drawable.photo_2
-            )
-        )
         return user
     }
+
 }

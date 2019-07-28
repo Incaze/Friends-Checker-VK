@@ -5,19 +5,19 @@ import android.os.Parcelable
 import org.json.JSONObject
 
 data class VKUser(
-    val id: Int = 0,
+    val id: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val photo: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
+        parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
+        parcel.writeString(id)
         parcel.writeString(firstName)
         parcel.writeString(lastName)
         parcel.writeString(photo)
@@ -37,9 +37,9 @@ data class VKUser(
         }
 
         fun parse(json: JSONObject)
-                = VKUser(id = json.optInt("id", 0),
+                = VKUser(id = json.optString("id", ""),
             firstName = json.optString("first_name", ""),
             lastName = json.optString("last_name", ""),
-            photo = json.optString("photo_200", ""))
+            photo = json.optString("photo_50", ""))
     }
 }

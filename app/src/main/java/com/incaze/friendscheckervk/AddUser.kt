@@ -1,5 +1,6 @@
 package com.incaze.friendscheckervk
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -10,16 +11,25 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.VKApiResponseParser
+import com.vk.api.sdk.auth.VKScope
 import com.vk.api.sdk.exceptions.VKApiExecutionException
 import kotlinx.android.synthetic.main.activity_main.*
 import com.vk.api.sdk.requests.VKRequest
 import kotlinx.android.synthetic.main.activity_dialog_add_users.*
 import org.json.JSONObject
+import android.app.NotificationManager
+import android.content.Context
+import android.util.Log
+import androidx.core.app.NotificationCompat
 
 
 class AddUser: AppCompatActivity(){
+
+    private val errorTAG = "AddUser_Error"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       // VK.login(this, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
         setContentView(R.layout.activity_dialog_add_users)
     }
 
@@ -28,17 +38,21 @@ class AddUser: AppCompatActivity(){
     }
 
     fun okOnClick(view: View){
-        val idString = findViewById<EditText>(R.id.id_user).text.toString()
-       /* var response : JSONObject
-        response ={
-
-        }*/
-       // var name = nameEditText.getText().toString()
-        VK.execute(FindUserVK(), object: VKApiCallback<List<VKUser>> {
-            override fun success(result: List<VKUser>) {
-                VKUser()
+        val idUser = findViewById<EditText>(R.id.id_user).text.toString()
+        VK.execute(FindUserVK(idUser), object: VKApiCallback<VKUser> {
+            override fun success(result: VKUser) {
+                val resultIntent = Intent(this@AddUser, MainActivity::class.java)
+                resultIntent.putExtra("idUser", result.id)
+                resultIntent.putExtra("firstName", result.firstName)
+                resultIntent.putExtra("secondName",result.lastName)
+                resultIntent.putExtra("photoURL",result.photo)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
             }
             override fun fail(error: VKApiExecutionException) {
+                Log.e(errorTAG, error.toString())
+                setResult(Activity.RESULT_CANCELED)
+                finish()
             }
         })
 

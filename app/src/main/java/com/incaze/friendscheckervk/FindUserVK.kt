@@ -4,17 +4,17 @@ import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 import com.vk.api.sdk.VKApiResponseParser
 
-class FindUserVK(uids: IntArray = intArrayOf()) : VKRequest<List<VKUser>>("users.get") {
+class FindUserVK(uids: String) : VKRequest<VKUser>("users.get") {
     init {
-        if (uids.isNotEmpty()) {
-            addParam("user_ids", uids.joinToString(","))
-        }
+       // if (uids.isNotEmpty()) {
+            addParam("user_ids", uids)
+       // }
+        addParam("fields", "photo_50")
     }
 
-    override fun parse(r: JSONObject): List<VKUser> {
+    override fun parse(r: JSONObject): VKUser {
         val users = r.getJSONArray("response")
-        val result = ArrayList<VKUser>()
-            result.add(VKUser.parse(users.getJSONObject(0)))
+        val result = (VKUser.parse(users.getJSONObject(0)))
         return result
     }
 }

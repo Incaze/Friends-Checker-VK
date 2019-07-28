@@ -11,13 +11,6 @@ import android.widget.ImageView
 class UserAdapter(private val dataSet: List<User>) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
- /*   fun UserAdapter(users: List<User>) {
-        this.users = users
-    }
-*/
-    /**
-     * Provide a reference to the type of views that you are using (custom ViewHolder)
-     */
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val userSurname: TextView
         val userName: TextView
@@ -49,8 +42,6 @@ class UserAdapter(private val dataSet: List<User>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, pos: Int) {
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-
-        //viewHolder.userSurname.text = dataSet[pos].toString()
         viewHolder.bind(dataSet[pos])
         viewHolder.itemView.tag = dataSet
     }
