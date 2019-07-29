@@ -26,10 +26,10 @@ import androidx.core.app.NotificationCompat
 class AddUser: AppCompatActivity(){
 
     private val errorTAG = "AddUser_Error"
+    private val debugTAG = "AddUser_Debug"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       // VK.login(this, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
         setContentView(R.layout.activity_dialog_add_users)
     }
 
@@ -41,11 +41,9 @@ class AddUser: AppCompatActivity(){
         val idUser = findViewById<EditText>(R.id.id_user).text.toString()
         VK.execute(FindUserVK(idUser), object: VKApiCallback<VKUser> {
             override fun success(result: VKUser) {
-                val resultIntent = Intent(this@AddUser, MainActivity::class.java)
-                resultIntent.putExtra("idUser", result.id)
-                resultIntent.putExtra("firstName", result.firstName)
-                resultIntent.putExtra("secondName",result.lastName)
-                resultIntent.putExtra("photoURL",result.photo)
+                Log.e(debugTAG, "Entered to success")
+                val resultIntent = intent
+                resultIntent.putExtra("VK_USER", result)
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }

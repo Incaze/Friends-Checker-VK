@@ -6,10 +6,8 @@ import com.vk.api.sdk.VKApiResponseParser
 
 class FindUserVK(uids: String) : VKRequest<VKUser>("users.get") {
     init {
-       // if (uids.isNotEmpty()) {
-            addParam("user_ids", uids)
-       // }
-        addParam("fields", "photo_50")
+        addParam("user_ids", uids)
+        addParam("fields", "photo_100")
     }
 
     override fun parse(r: JSONObject): VKUser {

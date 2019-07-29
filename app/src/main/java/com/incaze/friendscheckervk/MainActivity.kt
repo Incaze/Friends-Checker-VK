@@ -21,63 +21,47 @@ import com.vk.api.sdk.auth.VKScope
 import java.net.URL
 
 
-/*
-import com.vk.api.sdk.VK
-import com.vk.api.sdk.auth.VKScope
-import com.vk.api.sdk.auth.VKAccessToken
-import android.content.Intent
-import com.vk.api.sdk.auth.VKAuthCallback
-*/
-
 class MainActivity : AppCompatActivity() {
 
+    private val adapter = UserAdapter()
     private val errorTAG = "MainActivity_Error"
-    lateinit var user: List<User>
-    private lateinit var userAdapter: UserAdapter
+   // private val debugTAG = "MainActivity_DEBUG"
     private val REQUEST_CODE = 0
-   // var userList = arrayListOf<User>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         VK.initialize(this)
-       if (!VK.isLoggedIn()) {
-           VK.login(this, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
-       }
-        user = generateUserList()
+        if (!VK.isLoggedIn()) {
+            VK.login(this, arrayListOf(VKScope.WALL, VKScope.PHOTOS))
+        }
         setContentView(R.layout.activity_main)
         setupRecyclerView()
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
         val callback = object: VKAuthCallback {
             override fun onLogin(token: VKAccessToken) {
-                when (requestCode) {
-                    REQUEST_CODE -> {
-                        if (resultCode == Activity.RESULT_OK) {
-                            val idUser = data!!.getStringExtra("idUser")
-                            val firstName = data!!.getStringExtra("firstName")
-                            val secondName = data!!.getStringExtra("secondName")
-                            val photoURL = URL(data!!.getStringExtra("photoURL"))
-                            val photo: Bitmap = BitmapFactory.decodeStream(photoURL.openConnection().getInputStream())
-                            //myImageView.setImageBitmap(mIcon_val)
-                            //  findViewById(R.id.user_photo).setImageBitmap(photo)
-                            /* val photoView = findViewById<ImageView>(R.id.user_photo)
-                             userList.add(
-                                 User(
-                                     firstName!!,
-                                     secondName!!,
-                                     photoView.setImageBitmap(photo)
-                                 )
-                             )*/
-                        }
 
-                    }
-                }
             }
             override fun onLoginFailed(errorCode: Int) {
                 Log.e(errorTAG, errorCode.toString())
+
+            }
+
+        }
+
+        when (requestCode) {
+            REQUEST_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val result = data!!.getParcelableExtra<VKUser>("VK_USER")
+                    adapter.addUser(result)
+                }
             }
         }
+
         if (data == null || !VK.onActivityResult(requestCode, resultCode, data, callback)) {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -86,27 +70,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.activity_main_rv_users)
-        userAdapter = UserAdapter(user)
-        recyclerView.adapter = userAdapter
-        val linearLayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        recyclerView.adapter = adapter
     }
 
     fun startAddUser(view: View){
         val intent = Intent(this, AddUser::class.java)
         startActivityForResult(intent, REQUEST_CODE)
-    }
-
-    private fun generateUserList() : List<User>{
-       val user = arrayListOf<User>()
-        user.add(
-            User(
-                "Андрей",
-                "Петров",
-                R.drawable.photo_1
-            )
-        )
-        return user
     }
 
 }

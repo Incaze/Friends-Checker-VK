@@ -5,10 +5,10 @@ import android.os.Parcelable
 import org.json.JSONObject
 
 data class VKUser(
-    val id: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
-    val photo: String = "") : Parcelable {
+    var id: String = "",
+    var firstName: String = "",
+    var lastName: String = "",
+    var photo: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
@@ -40,6 +40,6 @@ data class VKUser(
                 = VKUser(id = json.optString("id", ""),
             firstName = json.optString("first_name", ""),
             lastName = json.optString("last_name", ""),
-            photo = json.optString("photo_50", ""))
+            photo = json.optString("photo_100", ""))
     }
 }

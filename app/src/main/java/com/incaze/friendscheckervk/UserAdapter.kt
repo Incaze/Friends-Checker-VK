@@ -6,48 +6,47 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.squareup.picasso.Picasso
 
-
-class UserAdapter(private val dataSet: List<User>) :
-    RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+    private val users: MutableList<VKUser> = arrayListOf()
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val userSurname: TextView
         val userName: TextView
         val userPhoto: ImageView
+        var userID: String
 
         init {
             userSurname = v.findViewById(R.id.user_surname)
             userName = v.findViewById(R.id.user_name)
             userPhoto = v.findViewById(R.id.user_photo)
+            userID = ""
         }
 
-         fun bind(user: User) {
-            userSurname.text = user.surname
-            userName.text = user.name
-            userPhoto.setImageResource(user.photo)
+        fun bind(user: VKUser) {
+            userSurname.text = user.lastName
+            userName.text = user.firstName
+            Picasso.get().load(user.photo).error(R.drawable.photo_1).into(userPhoto)
+            userID = user.id
         }
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view.
         val v = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.activity_user_item, viewGroup, false)
 
         return ViewHolder(v)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, pos: Int) {
-        // Get element from your dataset at this position and replace the contents of the view
-        // with that element
-        viewHolder.bind(dataSet[pos])
-        viewHolder.itemView.tag = dataSet
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(users[position])
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    fun addUser(users: VKUser?) {
+        this.users.add(users!!)
+        notifyItemChanged(getItemCount() - 1)
+    }
 
-
+    override fun getItemCount() = users.size
 }
