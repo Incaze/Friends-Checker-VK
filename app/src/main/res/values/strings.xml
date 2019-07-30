@@ -2,6 +2,11 @@
     <string name="app_name">Friends Checker VK</string>
     <string name="add_user_activity_name">Добавление ID</string>
     <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">CANCEL</string>
+    <string name="dialog_cancel">ОТМЕНА</string>
+    <string name="string_empty_list_add">Добавьте пользователя для поиска</string>
+    <string name="string_empty_list_auth">Для начала работы авторизуйтесь</string>
+    <string name="login">Авторизоваться</string>
+    <string name="start_parse">Начать поиск общих друзей</string>
+
     <integer name="com_vk_sdk_AppId">7070018</integer>
 </resources>

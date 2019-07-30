@@ -20,7 +20,12 @@ import org.json.JSONObject
 import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+
+
 
 
 class AddUser: AppCompatActivity(){
@@ -31,7 +36,11 @@ class AddUser: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dialog_add_users)
+        id_user.requestFocus()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
+
+
 
     fun cancelOnClick(view: View){
         super.onBackPressed()
@@ -49,7 +58,7 @@ class AddUser: AppCompatActivity(){
             }
             override fun fail(error: VKApiExecutionException) {
                 Log.e(errorTAG, error.toString())
-                setResult(Activity.RESULT_CANCELED)
+                setResult(Activity.RESULT_FIRST_USER)
                 finish()
             }
         })
