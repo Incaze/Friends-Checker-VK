@@ -8,28 +8,25 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 
-//@Parcelize
+
 class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
-    private var users: MutableList<VKUser> = arrayListOf()
+      private var users: MutableList<VKUser> = arrayListOf()
 
         class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val userSurname: TextView
         val userName: TextView
         val userPhoto: ImageView
-        var userID: String
 
         init {
             userSurname = v.findViewById(R.id.user_surname)
             userName = v.findViewById(R.id.user_name)
             userPhoto = v.findViewById(R.id.user_photo)
-            userID = ""
         }
 
         fun bind(user: VKUser) {
             userSurname.text = user.lastName
             userName.text = user.firstName
             Picasso.get().load(user.photo).error(R.drawable.photo_1).into(userPhoto)
-            userID = user.id
         }
     }
 
@@ -49,6 +46,11 @@ class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
         notifyItemChanged(getItemCount() - 1)
     }
 
+    fun addListOfUsers(users: List<VKUser>){
+        this.users.addAll(users)
+        notifyDataSetChanged()
+    }
+
     fun deleteUser(pos: Int) {
         users.removeAt(pos)
         notifyItemRemoved(pos)
@@ -61,6 +63,10 @@ class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
     fun removeAll(){
         users.removeAll(users)
         notifyDataSetChanged()
+    }
+
+    fun returnListOfUsers() : MutableList<VKUser>{
+        return users
     }
 
     override fun getItemCount() = users.size

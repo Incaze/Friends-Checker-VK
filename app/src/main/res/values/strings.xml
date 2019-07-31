@@ -1,12 +1,31 @@
 <resources>
-    <string name="app_name">Friends Checker VK</string>
-    <string name="add_user_activity_name">Добавление ID</string>
+    <string name="app_name">FC VK</string>
+    <integer name="com_vk_sdk_AppId">7070018</integer>
+
+    <!-- Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">ОТМЕНА</string>
+    <string name="dialog_title">Выйти</string>
+    <string name="dialog_message">Выход из аккаунта приведет к потере данных. Продолжить?</string>
+
+    <!-- Activity Titles-->
+    <string name="add_user_activity_name">Добавление ID</string>
+    <string name="main_activity_name">Список</string>
+    <string name="parse_activity_name">Результат</string>
+
+    <!-- Text Main Frame-->
     <string name="string_empty_list_add">Добавьте пользователя для поиска</string>
     <string name="string_empty_list_auth">Для начала работы авторизуйтесь</string>
-    <string name="login">Авторизоваться</string>
-    <string name="start_parse">Начать поиск общих друзей</string>
 
-    <integer name="com_vk_sdk_AppId">7070018</integer>
+    <!-- Toast text -->
+    <string name="user_does_not_exist">Пользователя с таким ID не существует</string>
+    <string name="auth_failed">Авторизация провалилась</string>
+
+    <!-- Menu items-->
+    <string name="go_back">Вернуться</string>
+    <string name="start_parse">Искать общих друзей</string>
+    <string name="login">Войти</string>
+    <string name="logout">Выйти</string>
+
+
 </resources>

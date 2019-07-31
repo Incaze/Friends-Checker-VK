@@ -6,7 +6,7 @@ import org.json.JSONObject
 class FindUserVK(uids: String) : VKRequest<VKUser>("users.get") {
     init {
         addParam("user_ids", uids)
-        addParam("fields", "photo_100")
+        addParam("fields", arrayOf("photo_100","can_access_closed","deactivated"))
     }
 
     override fun parse(r: JSONObject): VKUser {
