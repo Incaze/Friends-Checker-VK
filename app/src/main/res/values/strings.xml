@@ -22,6 +22,7 @@
     <string name="user_does_not_exist">Пользователя с таким ID не существует</string>
     <string name="auth_failed">Авторизация провалилась</string>
     <string name="user_list_is_empty">Добавьте пользователя</string>
+    <string name="error_user">Пользователь недоступен и не будет учитываться при поиске</string>
 
     <!-- Menu items-->
     <string name="go_back">Вернуться</string>

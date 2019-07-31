@@ -17,7 +17,9 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+    />
+
     <TextView
             android:id="@+id/user_surname"
             android:layout_width="0dp"
@@ -32,11 +34,13 @@
             android:paddingRight="10dp"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@id/user_name"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/line"
             app:layout_constraintStart_toEndOf="@id/user_photo"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Surname" />
+            tools:text="Surname"
+    />
+
     <TextView
             android:id="@+id/user_name"
             android:layout_width="0dp"
@@ -50,12 +54,36 @@
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/line"
             app:layout_constraintStart_toEndOf="@+id/user_photo"
             app:layout_constraintTop_toBottomOf="@id/user_surname"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Name" />
+            tools:text="Name"
+    />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85"
+    />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/error_user"
+            android:onClick="errorUserToast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src ="@drawable/ic_error_user"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/line"
+            app:layout_constraintEnd_toEndOf="parent"
+
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

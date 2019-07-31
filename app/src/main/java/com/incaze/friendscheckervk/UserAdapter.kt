@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 
@@ -16,17 +17,22 @@ class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
         val userSurname: TextView
         val userName: TextView
         val userPhoto: ImageView
+        val errorUser: ImageButton
 
         init {
             userSurname = v.findViewById(R.id.user_surname)
             userName = v.findViewById(R.id.user_name)
             userPhoto = v.findViewById(R.id.user_photo)
+            errorUser = v.findViewById(R.id.error_user)
         }
 
         fun bind(user: VKUser) {
             userSurname.text = user.lastName
             userName.text = user.firstName
-            Picasso.get().load(user.photo).error(R.drawable.photo_1).into(userPhoto)
+            Picasso.get().load(user.photo).error(R.drawable.ic_error_user).into(userPhoto)
+            if (((!user.can_access_closed) or (user.deactivated != ""))) {
+                errorUser.visibility = View.VISIBLE
+            }
         }
     }
 

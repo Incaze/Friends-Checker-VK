@@ -10,8 +10,6 @@ import android.widget.TextView
 import android.app.Activity
 import android.app.Dialog
 import android.util.Log
-import android.view.Gravity
-import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAccessToken
@@ -19,9 +17,6 @@ import com.vk.api.sdk.auth.VKAuthCallback
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
-import android.content.DialogInterface
-import android.content.pm.ActivityInfo
-import android.os.Build
 import com.vk.api.sdk.auth.VKScope
 
 
@@ -103,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                         val textEmpty = findViewById<TextView>(R.id.text_empty_list)
                         textEmpty.visibility = View.GONE
                         adapter.addUser(result)
+
                     }
                 }
             }
@@ -169,6 +165,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             VK.login(this, arrayListOf(VKScope.FRIENDS))
         }
+    }
+
+    fun errorUserToast(view: View){
+        val toast = ShowToast()
+        toast.showToast(this, getString(R.string.error_user))
     }
 
     fun startParse(item: MenuItem){
