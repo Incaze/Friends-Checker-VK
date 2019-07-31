@@ -9,9 +9,10 @@
     <string name="dialog_message">Выход из аккаунта приведет к потере данных. Продолжить?</string>
 
     <!-- Activity Titles-->
-    <string name="add_user_activity_name">Добавление ID</string>
+    <string name="add_user_activity_name">Добавление</string>
     <string name="main_activity_name">Список</string>
-    <string name="parse_activity_name">Результат</string>
+    <string name="parse_activity_name">Общих друзей: %1$s</string>
+    <string name="parse_activity_name_finding">Поиск…</string>
 
     <!-- Text Main Frame-->
     <string name="string_empty_list_add">Добавьте пользователя для поиска</string>
@@ -20,6 +21,7 @@
     <!-- Toast text -->
     <string name="user_does_not_exist">Пользователя с таким ID не существует</string>
     <string name="auth_failed">Авторизация провалилась</string>
+    <string name="user_list_is_empty">Добавьте пользователя</string>
 
     <!-- Menu items-->
     <string name="go_back">Вернуться</string>

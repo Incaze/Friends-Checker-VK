@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.activity_dialog_add_users.*
 import org.json.JSONObject
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.os.Build
 import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -46,7 +48,9 @@ class AddUser: AppCompatActivity(){
     }
 
     fun okOnClick(view: View){
-        val idUser = findViewById<EditText>(R.id.id_user).text.toString()
+        var idUser = findViewById<EditText>(R.id.id_user).text.toString()
+        idUser = idUser.removePrefix("https://vk.com/")
+        idUser = idUser.removeSuffix("/")
         VK.execute(FindUserVK(idUser), object: VKApiCallback<VKUser> {
             override fun success(result: VKUser) {
                 Log.e(debugTAG, "Entered to success")
@@ -57,8 +61,10 @@ class AddUser: AppCompatActivity(){
             }
             override fun fail(error: VKApiExecutionException) {
                 Log.e(errorTAG, error.toString())
-                setResult(Activity.RESULT_FIRST_USER)
-                finish()
+                //setResult(Activity.RESULT_FIRST_USER)
+                //finish()
+                val toast = ShowToast()
+                toast.showToast(view.context, getString(R.string.user_does_not_exist))
             }
         })
 

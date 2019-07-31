@@ -20,6 +20,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
+import android.content.pm.ActivityInfo
+import android.os.Build
 import com.vk.api.sdk.auth.VKScope
 
 
@@ -102,10 +104,6 @@ class MainActivity : AppCompatActivity() {
                         textEmpty.visibility = View.GONE
                         adapter.addUser(result)
                     }
-                    Activity.RESULT_FIRST_USER -> {
-                        val toast = ShowToast()
-                        toast.showToast(this, getString(R.string.user_does_not_exist))
-                    }
                 }
             }
         }
@@ -174,20 +172,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startParse(item: MenuItem){
-        val size = adapter.itemCount
-        val data : MutableList<VKUser> = adapter.returnListOfUsers()
-        val dataSend : ArrayList<Int> = arrayListOf()
-        var dataSize = 0
-        for (i in 0 until size) {
-            if (!((!data[i].can_access_closed) or (data[i].deactivated != ""))){
-                dataSend.add(data[i].id.toInt())
-                dataSize++
+        if (adapter.isEmpty()) {
+            val toast = ShowToast()
+            toast.showToast(this, getString(R.string.user_list_is_empty))
+        } else {
+            val size = adapter.itemCount
+            val data: MutableList<VKUser> = adapter.returnListOfUsers()
+            val dataSend: ArrayList<Int> = arrayListOf()
+            var dataSize = 0
+            for (i in 0 until size) {
+                if (!((!data[i].can_access_closed) or (data[i].deactivated != ""))) {
+                    dataSend.add(data[i].id.toInt())
+                    dataSize++
+                }
             }
+            val intent = Intent(this, ParseActivity::class.java)
+            intent.putExtra("USERS_LIST", dataSend)
+            intent.putExtra("USERS_LIST_SIZE", dataSize)
+            startActivity(intent)
         }
-        val intent = Intent(this, ParseActivity::class.java)
-        intent.putExtra("USERS_LIST", dataSend)
-        intent.putExtra("USERS_LIST_SIZE", dataSize)
-        startActivity(intent)
     }
 }
 

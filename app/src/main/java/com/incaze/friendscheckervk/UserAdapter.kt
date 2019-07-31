@@ -47,7 +47,22 @@ class UserAdapter:  RecyclerView.Adapter<UserAdapter.ViewHolder>() {
     }
 
     fun addListOfUsers(users: List<VKUser>){
-        this.users.addAll(users)
+        this.users.removeAll(this.users)
+        this.users.addAll<VKUser>(users)
+    }
+
+    fun retainListOfUsers(users: List<VKUser>){
+        val tmp: MutableList<VKUser> = arrayListOf()
+        tmp.addAll<VKUser>(this.users)
+        this.users.removeAll(this.users)
+        for (i in 0 until tmp.size) {
+            for (j in 0 until users.size) {
+                if (tmp[i].id == users[j].id) this.users.add(tmp[i])
+            }
+        }
+    }
+
+    fun notifyListOfUsers(){
         notifyDataSetChanged()
     }
 
