@@ -11,10 +11,10 @@ class GetFriendlistExecute {
 
     private val errorTAG = "GetFriendlistExecute"
 
-    fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : UserAdapter, activity : Activity) {
+    fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : AdapterParseActivity, activity : Activity) {
         var key = 0
         for (i in 0 until size) {
-            VK.execute(GetFriendlist(idArray[i]), object : VKApiCallback<List<VKUser>> {
+            VK.execute(GetFriendlistRequest(idArray[i]), object : VKApiCallback<List<VKUser>> {
                 override fun success(result: List<VKUser>) {
                     when (key){
                         0 -> {

@@ -34,6 +34,7 @@ data class VKUser(
     }
 
     companion object CREATOR : Parcelable.Creator<VKUser> {
+
         override fun createFromParcel(parcel: Parcel): VKUser {
             return VKUser(parcel)
         }

@@ -22,7 +22,7 @@ import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : AppCompatActivity() {
 
-    private var adapter = UserAdapter()
+    private var adapter = AdapterMainActivity()
     private val errorTAG = "MainActivity_Error"
 
     // private val debugTAG = "MainActivity_DEBUG"
@@ -33,9 +33,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         VK.initialize(this)
         invalidateOptionsMenu()
-        setupRecyclerView()
+        adapter.setup(this, adapter)
     }
-
 
     /* MENU OVERRIDES*/
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,18 +61,26 @@ class MainActivity : AppCompatActivity() {
             startParse.isVisible = false
             addUserButton.visibility = View.GONE
         }
-        textEmpty.visibility = View.VISIBLE
+        if (adapter.isEmpty()) {
+            textEmpty.visibility = View.VISIBLE
+        } else {
+            textEmpty.visibility = View.GONE
+        }
         return true
     }
 
     /* INSTANCE OVERRIDES*/
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        val outStateList = adapter.returnListOfUsers() as ArrayList
+        outState.putParcelableArrayList("USER_LIST", outStateList)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-
+        val restoreList = savedInstanceState.getParcelableArrayList<VKUser>("USER_LIST")
+        adapter.addListOfUsers(restoreList as List<VKUser>)
+        invalidateOptionsMenu()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -109,25 +116,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.activity_main_rv_users)
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = adapter
-        val swipeHandler = object : SwipeToDeleteUser(this) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                adapter.deleteUser(viewHolder.adapterPosition)
-                if (adapter.isEmpty()) {
-                    val textEmpty = findViewById<TextView>(R.id.text_empty_list)
-                    textEmpty.text = getString(R.string.string_empty_list_add)
-                    textEmpty.visibility = View.VISIBLE
-                }
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-
     private fun createLogoutDialog(title: String, message: String): Dialog {
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(title)
@@ -151,7 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     /* Buttons OnClick */
     fun startAddUser(view: View) {
-        val intent = Intent(view.context, AddUser::class.java)
+        val intent = Intent(view.context, AddUserActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE)
     }
 

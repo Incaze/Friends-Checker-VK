@@ -3,7 +3,7 @@ package com.incaze.friendscheckervk
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 
-class GetFriendlist(uid: Int) : VKRequest<List<VKUser>>("friends.get") {
+class GetFriendlistRequest(uid: Int) : VKRequest<List<VKUser>>("friends.get") {
     init {
         addParam("user_id", uid)
         addParam("fields", arrayOf("id","first_name","last_name","photo_100"))

@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AddUser"
+        <activity android:name=".AddUserActivity"
                   android:theme="@style/AppTheme.Floating"
                   android:label="@string/add_user_activity_name">
         </activity>

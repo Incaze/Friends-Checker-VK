@@ -10,7 +10,7 @@ import com.vk.api.sdk.VK
 
 class ParseActivity : AppCompatActivity() {
 
-    private var parseAdapter = UserAdapter()
+    private var parseAdapter = AdapterParseActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ class ParseActivity : AppCompatActivity() {
         val idArray = intent.getIntegerArrayListExtra("USERS_LIST") as ArrayList<Int>
         val size = intent.getIntExtra("USERS_LIST_SIZE", 0)
         title = getString(R.string.parse_activity_name_finding)
-        setupRecyclerView()
+        parseAdapter.setup(this, parseAdapter)
         val request = GetFriendlistExecute()
         request.executeRequest(idArray, size, parseAdapter, this)
     }
@@ -29,11 +29,6 @@ class ParseActivity : AppCompatActivity() {
         return true
     }
 
-    private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.activity_parse_rv_users)
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = parseAdapter
-    }
 
     fun backToMainActivity(item: MenuItem)
     {
