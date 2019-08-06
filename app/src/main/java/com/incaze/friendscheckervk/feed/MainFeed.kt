@@ -70,7 +70,7 @@ class MainFeed : MainAdapter() {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0 && floatBut.visibility == View.VISIBLE) {
                     floatBut.hide()
-                } else if ((dy < 0 && floatBut.visibility != View.VISIBLE) or (adapter.users.isEmpty())) {
+                } else if (dy < 0 && floatBut.visibility != View.VISIBLE) {
                     floatBut.show()
                 }
             }
