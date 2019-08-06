@@ -1,7 +1,11 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.request.execute
 
 import android.app.Activity
 import android.util.Log
+import com.incaze.friendscheckervk.feed.ParseFeed
+import com.incaze.friendscheckervk.R
+import com.incaze.friendscheckervk.model.VKUser
+import com.incaze.friendscheckervk.request.GetFriendlistRequest
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.exceptions.VKApiExecutionException
@@ -11,7 +15,7 @@ class GetFriendlistExecute {
 
     private val errorTAG = "GetFriendlistExecute"
 
-    fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : AdapterParseActivity, activity : Activity) {
+    fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : ParseFeed, activity : Activity) {
         var key = 0
         for (i in 0 until size) {
             VK.execute(GetFriendlistRequest(idArray[i]), object : VKApiCallback<List<VKUser>> {

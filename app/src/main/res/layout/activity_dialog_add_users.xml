@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:context=".AddUserActivity">
+        tools:context=".activity.AddUserActivity">
 
     <EditText
             app:layout_constraintStart_toStartOf="parent"

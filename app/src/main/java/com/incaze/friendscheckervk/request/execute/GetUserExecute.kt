@@ -1,7 +1,11 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.request.execute
 
 import android.app.Activity
 import android.util.Log
+import com.incaze.friendscheckervk.R
+import com.incaze.friendscheckervk.ShowToast
+import com.incaze.friendscheckervk.model.VKUser
+import com.incaze.friendscheckervk.request.GetUserRequest
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.exceptions.VKApiExecutionException

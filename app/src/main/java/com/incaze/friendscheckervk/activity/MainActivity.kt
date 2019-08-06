@@ -1,38 +1,51 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
 import android.widget.TextView
 import android.app.Activity
 import android.app.Dialog
 import android.util.Log
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.vk.api.sdk.VK
-import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthCallback
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.incaze.friendscheckervk.*
+import com.incaze.friendscheckervk.feed.MainFeed
+import com.incaze.friendscheckervk.model.VKUser
 import com.vk.api.sdk.auth.VKScope
+import com.vk.api.sdk.auth.VKAccessToken
 
 
 class MainActivity : AppCompatActivity() {
 
-    private var adapter = AdapterMainActivity()
+    private var adapter = MainFeed()
     private val errorTAG = "MainActivity_Error"
 
     // private val debugTAG = "MainActivity_DEBUG"
     private val REQUEST_CODE = 0
+
+    private val clickListener: View.OnClickListener = View.OnClickListener { v ->
+        when (v.id) {
+            R.id.activity_main_add_users -> {
+                startAddUser(v)
+            }
+           /* R.id.error_user -> {
+                errorUserToast()
+            }*/
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         VK.initialize(this)
         invalidateOptionsMenu()
+        setListeners()
         adapter.setup(this, adapter)
     }
 
@@ -40,6 +53,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.start_parse -> {
+                startParse()
+                return true
+            }
+            R.id.login_logout -> {
+                logInOut()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -122,7 +149,9 @@ class MainActivity : AppCompatActivity() {
             .setMessage(message)
             .setCancelable(false)
             .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
-                logoutRefresh()
+                VK.logout()
+                adapter.removeAll()
+                invalidateOptionsMenu()
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
@@ -131,19 +160,26 @@ class MainActivity : AppCompatActivity() {
         return alertDialog.create()
     }
 
-    private fun logoutRefresh(){
-        VK.logout()
-        adapter.removeAll()
-        invalidateOptionsMenu()
+    /* Listener */
+    private fun setListeners(){
+        val addUsers = findViewById<FloatingActionButton>(R.id.activity_main_add_users)
+        //val errorUser = findViewById<ImageButton>(R.id.error_user)
+        addUsers.setOnClickListener(clickListener)
+        //errorUser.setOnClickListener(clickListener)
     }
 
-    /* Buttons OnClick */
-    fun startAddUser(view: View) {
+    /* OnClick */
+    fun errorUserToast(view: View){
+        val toast = ShowToast()
+        toast.showToast(view.context, getString(R.string.error_user))
+    }
+
+    private fun startAddUser(view: View) {
         val intent = Intent(view.context, AddUserActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE)
     }
 
-    fun logInOut(item: MenuItem) {
+    private fun logInOut() {
         if (VK.isLoggedIn()) {
             val dialog = createLogoutDialog(
                 getString(R.string.dialog_title),
@@ -155,12 +191,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun errorUserToast(view: View){
-        val toast = ShowToast()
-        toast.showToast(this, getString(R.string.error_user))
-    }
-
-    fun startParse(item: MenuItem){
+    private fun startParse(){
         if (adapter.isEmpty()) {
             val toast = ShowToast()
             toast.showToast(this, getString(R.string.user_list_is_empty))

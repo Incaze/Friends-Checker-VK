@@ -1,4 +1,4 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.activity
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_dialog_add_users.*
 import android.view.WindowManager
-
+import com.incaze.friendscheckervk.request.execute.GetUserExecute
+import com.incaze.friendscheckervk.R
 
 
 class AddUserActivity: AppCompatActivity(){

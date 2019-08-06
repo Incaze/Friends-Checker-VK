@@ -1,15 +1,17 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.feed.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.incaze.friendscheckervk.R
+import com.incaze.friendscheckervk.model.VKUser
 import com.squareup.picasso.Picasso
 
-open class AdapterResult : RecyclerView.Adapter<AdapterResult.ViewHolder>() {
+open class ParseAdapter : RecyclerView.Adapter<ParseAdapter.ViewHolder>() {
     var users: MutableList<VKUser> = arrayListOf()
 
-    class ViewHolder(v: View) : AdapterData.ViewHolder(v) {
+    class ViewHolder(v: View) : MainAdapter.ViewHolder(v) {
         override fun bind(user: VKUser) {
             userSurname.text = user.lastName
             userName.text = user.firstName

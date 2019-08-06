@@ -1,21 +1,20 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.activity
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.vk.api.sdk.VK
+import com.incaze.friendscheckervk.feed.ParseFeed
+import com.incaze.friendscheckervk.request.execute.GetFriendlistExecute
+import com.incaze.friendscheckervk.R
 
 class ParseActivity : AppCompatActivity() {
 
-    private var parseAdapter = AdapterParseActivity()
+    private var parseAdapter = ParseFeed()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parse)
-        VK.initialize(this)
         val idArray = intent.getIntegerArrayListExtra("USERS_LIST") as ArrayList<Int>
         val size = intent.getIntExtra("USERS_LIST_SIZE", 0)
         title = getString(R.string.parse_activity_name_finding)
@@ -29,9 +28,19 @@ class ParseActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.go_back -> {
+                backToMainActivity()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
-    fun backToMainActivity(item: MenuItem)
+    private fun backToMainActivity()
     {
         super.onBackPressed()
     }
+
 }

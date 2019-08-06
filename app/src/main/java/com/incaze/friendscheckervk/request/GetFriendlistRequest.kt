@@ -1,5 +1,6 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.request
 
+import com.incaze.friendscheckervk.model.VKUser
 import com.vk.api.sdk.requests.VKRequest
 import org.json.JSONObject
 

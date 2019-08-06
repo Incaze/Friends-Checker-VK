@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class SwipeToDeleteUser(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_48)
+    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white)
     private val intrinsicWidth = deleteIcon!!.intrinsicWidth
     private val intrinsicHeight = deleteIcon!!.intrinsicHeight
     private val background = ColorDrawable()

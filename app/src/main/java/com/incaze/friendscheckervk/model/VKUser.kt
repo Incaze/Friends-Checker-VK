@@ -1,4 +1,4 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.model
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -44,11 +44,12 @@ data class VKUser(
         }
 
         fun parse(json: JSONObject)
-                = VKUser(id = json.optString("id", ""),
+                = VKUser(
+            id = json.optString("id", ""),
             firstName = json.optString("first_name", ""),
             lastName = json.optString("last_name", ""),
             photo = json.optString("photo_100", ""),
-            can_access_closed = json.optBoolean("can_access_closed",false),
+            can_access_closed = json.optBoolean("can_access_closed", false),
             deactivated = json.optString("deactivated", "")
         )
     }
