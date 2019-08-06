@@ -54,6 +54,10 @@ class MainFeed : MainAdapter() {
                     val textEmpty = activity.findViewById<TextView>(R.id.text_empty_list)
                     textEmpty.text = activity.getString(R.string.string_empty_list_add)
                     textEmpty.visibility = View.VISIBLE
+                    val floatBut = activity.findViewById<FloatingActionButton>(R.id.activity_main_add_users)
+                    if (floatBut.visibility != View.VISIBLE) {
+                        floatBut.show()
+                    }
                 }
             }
         }
@@ -65,9 +69,9 @@ class MainFeed : MainAdapter() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0 && floatBut.visibility == View.VISIBLE) {
-                    floatBut.hide();
-                } else if (dy < 0 && floatBut.visibility != View.VISIBLE) {
-                    floatBut.show();
+                    floatBut.hide()
+                } else if ((dy < 0 && floatBut.visibility != View.VISIBLE) or (adapter.users.isEmpty())) {
+                    floatBut.show()
                 }
             }
         })
