@@ -22,8 +22,8 @@ abstract class ParseAdapter : Adapter<ParseAdapter.ViewHolder>() {
 
     inner class ViewHolder(v: View) : Adapter.ViewHolder(v, onItemClick, users) {
         override fun bind(user: VKUser) {
-            userSurname.text = user.lastName
-            userName.text = user.firstName
+            userSurname.text = user.last_name
+            userName.text = user.first_name
             Picasso.get().load(user.photo).error(R.drawable.ic_error_user).into(userPhoto)
             errorUser.visibility = View.GONE
         }

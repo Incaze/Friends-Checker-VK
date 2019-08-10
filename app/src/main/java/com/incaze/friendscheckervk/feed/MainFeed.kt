@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.incaze.friendscheckervk.feed.adapter.MainAdapter
 import com.incaze.friendscheckervk.R
-import com.incaze.friendscheckervk.SwipeToDeleteUser
+import com.incaze.friendscheckervk.util.SwipeToDeleteUser
 import com.incaze.friendscheckervk.model.VKUser
-import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
 import android.net.Uri
 

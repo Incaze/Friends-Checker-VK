@@ -6,8 +6,8 @@ import org.json.JSONObject
 
 data class VKUser(
     var id: String = "",
-    var firstName: String = "",
-    var lastName: String = "",
+    var first_name: String = "",
+    var last_name: String = "",
     var photo: String = "",
     var can_access_closed: Boolean = false,
     var deactivated: String = "",
@@ -24,8 +24,8 @@ data class VKUser(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
-        parcel.writeString(firstName)
-        parcel.writeString(lastName)
+        parcel.writeString(first_name)
+        parcel.writeString(last_name)
         parcel.writeString(photo)
         parcel.writeBoolean(can_access_closed)
         parcel.writeString(deactivated)
@@ -49,8 +49,8 @@ data class VKUser(
         fun parse(json: JSONObject)
                 = VKUser(
             id = json.optString("id", ""),
-            firstName = json.optString("first_name", ""),
-            lastName = json.optString("last_name", ""),
+            first_name = json.optString("first_name", ""),
+            last_name = json.optString("last_name", ""),
             photo = json.optString("photo_100", ""),
             can_access_closed = json.optBoolean("can_access_closed", false),
             deactivated = json.optString("deactivated", ""),

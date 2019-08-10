@@ -2,19 +2,20 @@
     <string name="app_name">FC VK</string>
     <integer name="com_vk_sdk_AppId">7070018</integer>
     <string name="url_vk_com">https://vk.com/%1$s</string>
+
     <!-- Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">ОТМЕНА</string>
     <string name="dialog_title">Выйти</string>
     <string name="dialog_message">Выход из аккаунта приведет к потере данных. Продолжить?</string>
 
-    <!-- Activity Titles-->
+    <!-- Activity Titles -->
     <string name="add_user_activity_name">Добавление</string>
     <string name="main_activity_name">Список</string>
     <string name="parse_activity_name">Общих друзей: %1$s</string>
     <string name="parse_activity_name_finding">Поиск…</string>
 
-    <!-- Text Main Frame-->
+    <!-- Text Main Frame -->
     <string name="string_empty_list_add">Добавьте пользователя для поиска</string>
     <string name="string_empty_list_auth">Для начала работы авторизуйтесь</string>
 
@@ -24,11 +25,13 @@
     <string name="user_list_is_empty">Добавьте пользователя</string>
     <string name="error_user">Пользователь недоступен и не будет учитываться при поиске</string>
 
-    <!-- Menu items-->
+    <!-- Menu items -->
     <string name="go_back">Вернуться</string>
     <string name="start_parse">Искать общих друзей</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>
 
+    <!-- DataBase -->
+    <string name="db_name">VK_DB</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.incaze.friendscheckervk
+package com.incaze.friendscheckervk.util
 
 import android.content.Context
 import android.view.Gravity

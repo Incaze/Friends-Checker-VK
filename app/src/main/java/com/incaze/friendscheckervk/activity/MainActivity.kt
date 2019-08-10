@@ -7,6 +7,7 @@ import android.content.Intent
 import android.widget.TextView
 import android.app.Activity
 import android.app.Dialog
+import android.content.ContentValues
 import android.util.Log
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthCallback
@@ -17,9 +18,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.incaze.friendscheckervk.*
 import com.incaze.friendscheckervk.feed.MainFeed
 import com.incaze.friendscheckervk.model.VKUser
+import com.incaze.friendscheckervk.util.DBHelper
 import com.vk.api.sdk.auth.VKScope
 import com.vk.api.sdk.auth.VKAccessToken
-
+import com.incaze.friendscheckervk.util.ShowToast
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     // private val debugTAG = "MainActivity_DEBUG"
     private val REQUEST_CODE = 0
+    private lateinit var dataHelper : DBHelper
 
     private val clickListener: View.OnClickListener = View.OnClickListener { v ->
         when (v.id) {
@@ -46,7 +49,34 @@ class MainActivity : AppCompatActivity() {
         VK.initialize(this)
         invalidateOptionsMenu()
         setListeners()
+        dataHelper = DBHelper(this)
+        adapter.addListOfUsers(dataHelper.loadUsers(dataHelper))
         adapter.setup(this, adapter)
+    }
+
+    override fun onDestroy() {
+        val db = dataHelper.writableDatabase
+        db.delete("UsersVK", null, null)
+        val userList = adapter.returnListOfUsers()
+        val content = ContentValues()
+        for (i in 0 until userList.size) {
+            content.put("id", userList[i].id)
+            content.put("first_name", userList[i].first_name)
+            content.put("last_name", userList[i].last_name)
+            content.put("photo", userList[i].photo)
+            if (userList[i].can_access_closed) {
+                content.put("can_access_closed", 1)
+            } else {
+                content.put("can_access_closed", 0)
+            }
+            content.put("deactivated", userList[i].deactivated)
+            content.put("domain", userList[i].domain)
+            db.insert("UsersVK", null, content)
+            content.clear()
+        }
+        db.close()
+        dataHelper.close()
+        super.onDestroy()
     }
 
     /* MENU OVERRIDES*/
