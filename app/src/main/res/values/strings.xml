@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FC VK</string>
     <integer name="com_vk_sdk_AppId">7070018</integer>
-
+    <string name="url_vk_com">https://vk.com/%1$s</string>
     <!-- Dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">ОТМЕНА</string>

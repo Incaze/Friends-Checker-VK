@@ -3,15 +3,24 @@ package com.incaze.friendscheckervk.feed.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
 import com.squareup.picasso.Picasso
 
-open class ParseAdapter : RecyclerView.Adapter<ParseAdapter.ViewHolder>() {
-    var users: MutableList<VKUser> = arrayListOf()
+abstract class ParseAdapter : Adapter<ParseAdapter.ViewHolder>() {
 
-    class ViewHolder(v: View) : MainAdapter.ViewHolder(v) {
+    override fun onCreateHolder(parent: ViewGroup): ViewHolder {
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.user_item, parent, false)
+
+        return ViewHolder(v)
+    }
+
+    override fun onBindHolder(viewHolder: ViewHolder, data: VKUser, position: Int) {
+        viewHolder.bind(users[position])
+    }
+
+    inner class ViewHolder(v: View) : Adapter.ViewHolder(v, onItemClick, users) {
         override fun bind(user: VKUser) {
             userSurname.text = user.lastName
             userName.text = user.firstName
@@ -19,17 +28,4 @@ open class ParseAdapter : RecyclerView.Adapter<ParseAdapter.ViewHolder>() {
             errorUser.visibility = View.GONE
         }
     }
-
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.user_item, viewGroup, false)
-
-        return ViewHolder(v)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(users[position])
-    }
-
-    override fun getItemCount() = users.size
 }

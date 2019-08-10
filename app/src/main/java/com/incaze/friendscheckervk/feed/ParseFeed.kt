@@ -1,6 +1,8 @@
 package com.incaze.friendscheckervk.feed
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.incaze.friendscheckervk.feed.adapter.ParseAdapter
@@ -33,5 +35,10 @@ class ParseFeed : ParseAdapter() {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_parse_rv_users)
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = adapter
+        adapter.onItemClick = { user ->
+            val domain = user.domain
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(activity.getString(R.string.url_vk_com, domain)))
+            activity.startActivity(browserIntent)
+        }
     }
 }

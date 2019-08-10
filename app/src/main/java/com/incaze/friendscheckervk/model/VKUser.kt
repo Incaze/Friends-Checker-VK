@@ -10,7 +10,8 @@ data class VKUser(
     var lastName: String = "",
     var photo: String = "",
     var can_access_closed: Boolean = false,
-    var deactivated: String = "") : Parcelable {
+    var deactivated: String = "",
+    var domain: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
@@ -18,6 +19,7 @@ data class VKUser(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readBoolean(),
+        parcel.readString()!!,
         parcel.readString()!!)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -27,6 +29,7 @@ data class VKUser(
         parcel.writeString(photo)
         parcel.writeBoolean(can_access_closed)
         parcel.writeString(deactivated)
+        parcel.writeString(domain)
     }
 
     override fun describeContents(): Int {
@@ -50,7 +53,8 @@ data class VKUser(
             lastName = json.optString("last_name", ""),
             photo = json.optString("photo_100", ""),
             can_access_closed = json.optBoolean("can_access_closed", false),
-            deactivated = json.optString("deactivated", "")
+            deactivated = json.optString("deactivated", ""),
+            domain = json.optString("domain", "")
         )
     }
 }

@@ -7,7 +7,7 @@ import org.json.JSONObject
 class GetFriendlistRequest(uid: Int) : VKRequest<List<VKUser>>("friends.get") {
     init {
         addParam("user_id", uid)
-        addParam("fields", arrayOf("id","first_name","last_name","photo_100"))
+        addParam("fields", arrayOf("id","first_name","last_name","photo_100", "domain"))
     }
 
     override fun parse(r: JSONObject): List<VKUser> {

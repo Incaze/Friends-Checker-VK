@@ -11,6 +11,10 @@ import com.incaze.friendscheckervk.feed.adapter.MainAdapter
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.SwipeToDeleteUser
 import com.incaze.friendscheckervk.model.VKUser
+import androidx.core.content.ContextCompat.startActivity
+import android.content.Intent
+import android.net.Uri
+
 
 class MainFeed : MainAdapter() {
 
@@ -46,6 +50,11 @@ class MainFeed : MainAdapter() {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_main_rv_users)
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = adapter
+        adapter.onItemClick = { user ->
+            val domain = user.domain
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(activity.getString(R.string.url_vk_com, domain)))
+            activity.startActivity(browserIntent)
+        }
         // SWIPE TO DELETE
         val swipeHandler = object : SwipeToDeleteUser(activity) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
