@@ -1,5 +1,6 @@
 package com.incaze.friendscheckervk.feed.adapter
 
+import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -54,6 +55,17 @@ abstract class Adapter<VH : RecyclerView.ViewHolder>:  RecyclerView.Adapter<Recy
 
         abstract fun bind(user: VKUser)
 
+    }
+
+    abstract fun setup(activity: Activity, adapter: Adapter<VH>)
+
+    fun returnListOfUsers() : MutableList<VKUser>{
+        return users
+    }
+
+    fun addListOfUsers(users: List<VKUser>){
+        this.users.removeAll(this.users)
+        this.users.addAll<VKUser>(users)
     }
 
 }

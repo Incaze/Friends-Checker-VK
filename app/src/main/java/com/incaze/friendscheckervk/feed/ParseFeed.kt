@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.incaze.friendscheckervk.feed.adapter.ParseAdapter
 import com.incaze.friendscheckervk.R
+import com.incaze.friendscheckervk.feed.adapter.Adapter
 import com.incaze.friendscheckervk.model.VKUser
 
 class ParseFeed : ParseAdapter() {
@@ -26,12 +27,7 @@ class ParseFeed : ParseAdapter() {
         notifyDataSetChanged()
     }
 
-    fun addListOfUsers(users: List<VKUser>){
-        this.users.removeAll(this.users)
-        this.users.addAll<VKUser>(users)
-    }
-
-    fun setup(activity: Activity, adapter: ParseAdapter){
+    override fun setup(activity: Activity, adapter: Adapter<ViewHolder>) {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_parse_rv_users)
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = adapter

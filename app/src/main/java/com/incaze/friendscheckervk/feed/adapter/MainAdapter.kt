@@ -29,6 +29,8 @@ abstract class MainAdapter: Adapter<MainAdapter.ViewHolder>() {
             Picasso.get().load(user.photo).error(R.drawable.ic_error_user).into(userPhoto)
             if (((!user.can_access_closed) or (user.deactivated != ""))) {
                 errorUser.visibility = View.VISIBLE
+            } else {
+                errorUser.visibility = View.GONE
             }
         }
     }

@@ -13,6 +13,7 @@ import com.incaze.friendscheckervk.util.SwipeToDeleteUser
 import com.incaze.friendscheckervk.model.VKUser
 import android.content.Intent
 import android.net.Uri
+import com.incaze.friendscheckervk.feed.adapter.Adapter
 
 
 class MainFeed : MainAdapter() {
@@ -20,11 +21,6 @@ class MainFeed : MainAdapter() {
     fun addUser(users: VKUser?) {
         this.users.add(users!!)
         notifyItemChanged(getItemCount() - 1)
-    }
-
-    fun addListOfUsers(users: List<VKUser>){
-        this.users.removeAll(this.users)
-        this.users.addAll<VKUser>(users)
     }
 
     fun deleteUser(pos: Int) {
@@ -41,11 +37,8 @@ class MainFeed : MainAdapter() {
         notifyDataSetChanged()
     }
 
-    fun returnListOfUsers() : MutableList<VKUser>{
-        return users
-    }
 
-    fun setup(activity: Activity, adapter: MainAdapter){
+    override fun setup(activity: Activity, adapter: Adapter<ViewHolder>) {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_main_rv_users)
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = adapter
