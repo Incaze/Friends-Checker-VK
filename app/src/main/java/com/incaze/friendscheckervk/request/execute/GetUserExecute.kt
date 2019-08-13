@@ -14,15 +14,27 @@ class GetUserExecute {
 
     private val errorTAG = "GetUserExecute_Error"
 
-    fun executeRequest(idUser: String, activity: Activity){
+    fun executeRequest(idUser: String, activity: Activity, userList : List<String>){
         var id = idUser.removePrefix("https://vk.com/")
         id = id.removeSuffix("/")
         VK.execute(GetUserRequest(id), object: VKApiCallback<VKUser> {
             override fun success(result: VKUser) {
+                var isUnique = true
+                for (i in 0 until userList.size){
+                    if (result.id == userList[i]) {
+                        isUnique = false
+                        break
+                    }
+                }
                 val resultIntent = activity.intent
-                resultIntent.putExtra("VK_USER", result)
-                activity.setResult(Activity.RESULT_OK, resultIntent)
-                activity.finish()
+                if (isUnique) {
+                    resultIntent.putExtra("VK_USER", result)
+                    activity.setResult(Activity.RESULT_OK, resultIntent)
+                    activity.finish()
+                } else {
+                    val toast = ShowToast()
+                    toast.showToast(activity, activity.getString(R.string.not_unique_id))
+                }
             }
             override fun fail(error: VKApiExecutionException) {
                 Log.e(errorTAG, error.toString())

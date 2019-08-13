@@ -2,6 +2,8 @@ package com.incaze.friendscheckervk.request.execute
 
 import android.app.Activity
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import com.incaze.friendscheckervk.feed.ParseFeed
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
@@ -9,6 +11,7 @@ import com.incaze.friendscheckervk.request.GetFriendlistRequest
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.exceptions.VKApiExecutionException
+
 import kotlin.collections.ArrayList
 
 class GetFriendlistExecute {
@@ -17,6 +20,10 @@ class GetFriendlistExecute {
 
     fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : ParseFeed, activity : Activity) {
         var key = 0
+        val bar = activity.findViewById<ProgressBar>(R.id.progress_parse)
+        bar.visibility = View.VISIBLE
+        bar.max = size
+        bar.progress = 0
         for (i in 0 until size) {
             VK.execute(GetFriendlistRequest(idArray[i]), object : VKApiCallback<List<VKUser>> {
                 override fun success(result: List<VKUser>) {
@@ -24,20 +31,19 @@ class GetFriendlistExecute {
                         0 -> {
                             parseAdapter.addListOfUsers(result)
                             if (key == size - 1) {
-                                parseAdapter.notifyListOfUsers()
-                                changeTitle(activity, parseAdapter.itemCount.toString())
+                                finishOfExecute(parseAdapter, activity, bar)
                             }
                         }
                         (size - 1) -> {
                             parseAdapter.retainListOfUsers(result)
-                            parseAdapter.notifyListOfUsers()
-                            changeTitle(activity, parseAdapter.itemCount.toString())
+                            finishOfExecute(parseAdapter, activity, bar)
                         }
                         else -> {
                             parseAdapter.retainListOfUsers(result)
                         }
                     }
                     key++
+                    bar.incrementProgressBy(1)
                 }
                 override fun fail(error: VKApiExecutionException) {
                     Log.e(errorTAG, error.toString())
@@ -45,6 +51,12 @@ class GetFriendlistExecute {
                 }
             })
         }
+    }
+
+    private fun finishOfExecute(parseAdapter: ParseFeed, activity: Activity, bar: ProgressBar){
+        parseAdapter.notifyListOfUsers()
+        changeTitle(activity, parseAdapter.itemCount.toString())
+        bar.visibility = View.GONE
     }
 
     private fun changeTitle(activity: Activity, count: String){

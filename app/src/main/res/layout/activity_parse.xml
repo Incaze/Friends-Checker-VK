@@ -7,6 +7,33 @@
         android:layout_height="match_parent"
         tools:context=".activity.ParseActivity"
 >
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start_line_parse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.2"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_line_parse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8"
+    />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progress="0"
+            android:id="@+id/progress_parse"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/start_line_parse"
+            app:layout_constraintEnd_toEndOf="@id/end_line_parse"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_parse_rv_users"
@@ -19,6 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

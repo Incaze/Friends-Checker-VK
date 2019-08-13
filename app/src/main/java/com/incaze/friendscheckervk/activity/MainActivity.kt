@@ -27,54 +27,23 @@ class MainActivity : AppCompatActivity() {
 
     private var adapter = MainFeed()
     private val errorTAG = "MainActivity_Error"
-
-    // private val debugTAG = "MainActivity_DEBUG"
+    private val debugTAG = "MainActivity_DEBUG"
     private val REQUEST_CODE = 0
     private lateinit var dataHelper : DBHelper
 
-    private val clickListener: View.OnClickListener = View.OnClickListener { v ->
-        when (v.id) {
-            R.id.activity_main_add_users -> {
-                startAddUser(v)
-            }
-           /* R.id.error_user -> {
-                errorUserToast()
-            }*/
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(debugTAG,"onCreate")
         setContentView(R.layout.activity_main)
-        VK.initialize(this)
-        invalidateOptionsMenu()
-        setListeners()
         dataHelper = DBHelper(this)
-        adapter.addListOfUsers(dataHelper.loadUsers(dataHelper))
-        adapter.setup(this, adapter)
+        if (savedInstanceState == null){
+            restoreDB()
+            invalidateOptionsMenu()
+        }
+        setListeners()
     }
 
     override fun onDestroy() {
-        val db = dataHelper.writableDatabase
-        db.delete("UsersVK", null, null)
-        val userList = adapter.returnListOfUsers()
-        val content = ContentValues()
-        for (i in 0 until userList.size) {
-            content.put("id", userList[i].id)
-            content.put("first_name", userList[i].first_name)
-            content.put("last_name", userList[i].last_name)
-            content.put("photo", userList[i].photo)
-            if (userList[i].can_access_closed) {
-                content.put("can_access_closed", 1)
-            } else {
-                content.put("can_access_closed", 0)
-            }
-            content.put("deactivated", userList[i].deactivated)
-            content.put("domain", userList[i].domain)
-            db.insert("UsersVK", null, content)
-            content.clear()
-        }
-        db.close()
         dataHelper.close()
         super.onDestroy()
     }
@@ -129,14 +98,17 @@ class MainActivity : AppCompatActivity() {
     /* INSTANCE OVERRIDES*/
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        Log.d(debugTAG,"SaveInstance")
         val outStateList = adapter.returnListOfUsers() as ArrayList
         outState.putParcelableArrayList("USER_LIST", outStateList)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
+        Log.d(debugTAG,"RestoreInstance")
         val restoreList = savedInstanceState.getParcelableArrayList<VKUser>("USER_LIST")
         adapter.addListOfUsers(restoreList as List<VKUser>)
+        adapter.setup(this, adapter, dataHelper)
         invalidateOptionsMenu()
     }
 
@@ -162,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                         val textEmpty = findViewById<TextView>(R.id.text_empty_list)
                         textEmpty.visibility = View.GONE
                         adapter.addUser(result)
-
+                        insertUserIntoDB(result)
                     }
                 }
             }
@@ -181,6 +153,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
                 VK.logout()
                 adapter.removeAll()
+                deleteAllUsersFromDB()
                 invalidateOptionsMenu()
                 dialog.dismiss()
             }
@@ -190,22 +163,50 @@ class MainActivity : AppCompatActivity() {
         return alertDialog.create()
     }
 
+    /* DATABASE FUNCTIONS */
+    private fun restoreDB(){
+        val db = dataHelper.writableDatabase
+        adapter.addListOfUsers(dataHelper.loadUsers(db))
+        db.close()
+        adapter.setup(this, adapter, dataHelper)
+    }
+
+    private fun deleteAllUsersFromDB(){
+        val db = dataHelper.writableDatabase
+        db.delete("UsersVK", null, null)
+        db.close()
+    }
+
+    private fun insertUserIntoDB(userVK: VKUser){
+        val db = dataHelper.writableDatabase
+        val content = ContentValues()
+        content.put("id", userVK.id)
+        content.put("first_name", userVK.first_name)
+        content.put("last_name", userVK.last_name)
+        content.put("photo", userVK.photo)
+        if (userVK.can_access_closed) {
+            content.put("can_access_closed", 1)
+        } else {
+            content.put("can_access_closed", 0)
+        }
+        content.put("deactivated", userVK.deactivated)
+        content.put("domain", userVK.domain)
+        db.insert("UsersVK", null, content)
+        db.close()
+    }
+
     /* Listener */
     private fun setListeners(){
         val addUsers = findViewById<FloatingActionButton>(R.id.activity_main_add_users)
-        //val errorUser = findViewById<ImageButton>(R.id.error_user)
-        addUsers.setOnClickListener(clickListener)
-        //errorUser.setOnClickListener(clickListener)
+        addUsers.setOnClickListener{
+            startAddUser(it)
+        }
     }
 
     /* OnClick */
-    fun errorUserToast(view: View){
-        val toast = ShowToast()
-        toast.showToast(view.context, getString(R.string.error_user))
-    }
-
     private fun startAddUser(view: View) {
         val intent = Intent(view.context, AddUserActivity::class.java)
+        intent.putExtra("AddUserActivity_List", adapter.returnListOfUsersId() as ArrayList)
         startActivityForResult(intent, REQUEST_CODE)
     }
 

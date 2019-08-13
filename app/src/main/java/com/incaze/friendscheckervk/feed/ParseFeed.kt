@@ -9,6 +9,7 @@ import com.incaze.friendscheckervk.feed.adapter.ParseAdapter
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.feed.adapter.Adapter
 import com.incaze.friendscheckervk.model.VKUser
+import com.incaze.friendscheckervk.util.DBHelper
 
 class ParseFeed : ParseAdapter() {
 
@@ -18,8 +19,12 @@ class ParseFeed : ParseAdapter() {
         this.users.removeAll(this.users)
         for (i in 0 until tmp.size) {
             for (j in 0 until users.size) {
-                if (tmp[i].id == users[j].id) this.users.add(tmp[i])
+                if (tmp[i].id == users[j].id) {
+                    this.users.add(tmp[i])
+                    break
+                }
             }
+            continue
         }
     }
 
@@ -27,7 +32,7 @@ class ParseFeed : ParseAdapter() {
         notifyDataSetChanged()
     }
 
-    override fun setup(activity: Activity, adapter: Adapter<ViewHolder>) {
+    override fun setup(activity: Activity, adapter: Adapter<ViewHolder>, dbHelper: DBHelper?) {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_parse_rv_users)
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = adapter

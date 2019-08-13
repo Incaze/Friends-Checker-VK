@@ -24,6 +24,7 @@
     <string name="auth_failed">Авторизация провалилась</string>
     <string name="user_list_is_empty">Добавьте пользователя</string>
     <string name="error_user">Пользователь недоступен и не будет учитываться при поиске</string>
+    <string name="not_unique_id">Такой пользователь уже есть в списке</string>
 
     <!-- Menu items -->
     <string name="go_back">Вернуться</string>

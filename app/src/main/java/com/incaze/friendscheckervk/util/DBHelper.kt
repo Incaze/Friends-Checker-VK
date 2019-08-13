@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
 
-internal class DBHelper(context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 1) {
+class DBHelper(context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 1) {
 
     override fun onCreate(db:SQLiteDatabase) {
       db.execSQL(
@@ -26,8 +26,7 @@ internal class DBHelper(context: Context) : SQLiteOpenHelper(context, context.ge
 
     }
 
-    fun loadUsers(dbHelper: DBHelper) : List<VKUser> {
-        val db = dbHelper.writableDatabase
+    fun loadUsers(db: SQLiteDatabase) : List<VKUser> {
         val c = db.query(
             "UsersVK",
             null,
@@ -61,5 +60,4 @@ internal class DBHelper(context: Context) : SQLiteOpenHelper(context, context.ge
         c.close()
         return userList
     }
-
 }

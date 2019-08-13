@@ -9,8 +9,8 @@ import com.vk.api.sdk.VKTokenExpiredHandler
 class Application: Application() {
 
     override fun onCreate() {
-        super.onCreate()
         VK.initialize(this)
+        super.onCreate()
         VK.addTokenExpiredHandler(tokenTracker)
     }
 
