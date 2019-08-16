@@ -6,30 +6,30 @@ import android.view.View
 import android.content.Intent
 import android.widget.TextView
 import android.app.Activity
-import android.app.Dialog
-import android.content.ContentValues
 import android.util.Log
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAuthCallback
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.incaze.friendscheckervk.*
 import com.incaze.friendscheckervk.feed.MainFeed
 import com.incaze.friendscheckervk.model.VKUser
-import com.incaze.friendscheckervk.util.DBHelper
-import com.vk.api.sdk.auth.VKScope
+import com.incaze.friendscheckervk.util.ActivityOnClick
+import com.incaze.friendscheckervk.database.DBExecutor
+import com.incaze.friendscheckervk.database.DBHelper
+import com.incaze.friendscheckervk.util.Toast
 import com.vk.api.sdk.auth.VKAccessToken
-import com.incaze.friendscheckervk.util.ShowToast
 
 class MainActivity : AppCompatActivity() {
 
-    private var adapter = MainFeed()
+    private val adapter = MainFeed()
+    private lateinit var dataHelper : DBHelper
+    private val REQUEST_CODE = 0
+    private val dbExecutor = DBExecutor()
+    private val onClick = ActivityOnClick(this)
     private val errorTAG = "MainActivity_Error"
     private val debugTAG = "MainActivity_DEBUG"
-    private val REQUEST_CODE = 0
-    private lateinit var dataHelper : DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         dataHelper = DBHelper(this)
         if (savedInstanceState == null){
-            restoreDB()
+            dbExecutor.restoreDB(dataHelper, adapter, this)
             invalidateOptionsMenu()
         }
         setListeners()
@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.start_parse -> {
-                startParse()
+                onClick.startParse(adapter)
                 return true
             }
             R.id.login_logout -> {
-                logInOut()
+                onClick.logInOut(dbExecutor, dataHelper, adapter)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onLoginFailed(errorCode: Int) {
-                val toast = ShowToast()
+                val toast = Toast()
                 toast.showToast(this@MainActivity, getString(R.string.auth_failed))
                 Log.e(errorTAG, errorCode.toString())
 
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                         val textEmpty = findViewById<TextView>(R.id.text_empty_list)
                         textEmpty.visibility = View.GONE
                         adapter.addUser(result)
-                        insertUserIntoDB(result)
+                        dbExecutor.insertUserIntoDB(dataHelper, result)
                     }
                 }
             }
@@ -145,103 +145,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createLogoutDialog(title: String, message: String): Dialog {
-        val alertDialog = AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setCancelable(false)
-            .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
-                VK.logout()
-                adapter.removeAll()
-                deleteAllUsersFromDB()
-                invalidateOptionsMenu()
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
-                dialog.dismiss()
-            }
-        return alertDialog.create()
-    }
-
-    /* DATABASE FUNCTIONS */
-    private fun restoreDB(){
-        val db = dataHelper.writableDatabase
-        adapter.addListOfUsers(dataHelper.loadUsers(db))
-        db.close()
-        adapter.setup(this, adapter, dataHelper)
-    }
-
-    private fun deleteAllUsersFromDB(){
-        val db = dataHelper.writableDatabase
-        db.delete("UsersVK", null, null)
-        db.close()
-    }
-
-    private fun insertUserIntoDB(userVK: VKUser){
-        val db = dataHelper.writableDatabase
-        val content = ContentValues()
-        content.put("id", userVK.id)
-        content.put("first_name", userVK.first_name)
-        content.put("last_name", userVK.last_name)
-        content.put("photo", userVK.photo)
-        if (userVK.can_access_closed) {
-            content.put("can_access_closed", 1)
-        } else {
-            content.put("can_access_closed", 0)
-        }
-        content.put("deactivated", userVK.deactivated)
-        content.put("domain", userVK.domain)
-        db.insert("UsersVK", null, content)
-        db.close()
-    }
-
     /* Listener */
     private fun setListeners(){
         val addUsers = findViewById<FloatingActionButton>(R.id.activity_main_add_users)
         addUsers.setOnClickListener{
-            startAddUser(it)
+            onClick.startAddUser(it, REQUEST_CODE, adapter)
         }
     }
 
-    /* OnClick */
-    private fun startAddUser(view: View) {
-        val intent = Intent(view.context, AddUserActivity::class.java)
-        intent.putExtra("AddUserActivity_List", adapter.returnListOfUsersId() as ArrayList)
-        startActivityForResult(intent, REQUEST_CODE)
-    }
-
-    private fun logInOut() {
-        if (VK.isLoggedIn()) {
-            val dialog = createLogoutDialog(
-                getString(R.string.dialog_title),
-                getString(R.string.dialog_message)
-            )
-            dialog.show()
-        } else {
-            VK.login(this, arrayListOf(VKScope.FRIENDS))
-        }
-    }
-
-    private fun startParse(){
-        if (adapter.isEmpty()) {
-            val toast = ShowToast()
-            toast.showToast(this, getString(R.string.user_list_is_empty))
-        } else {
-            val size = adapter.itemCount
-            val data: MutableList<VKUser> = adapter.returnListOfUsers()
-            val dataSend: ArrayList<Int> = arrayListOf()
-            var dataSize = 0
-            for (i in 0 until size) {
-                if (!((!data[i].can_access_closed) or (data[i].deactivated != ""))) {
-                    dataSend.add(data[i].id.toInt())
-                    dataSize++
-                }
-            }
-            val intent = Intent(this, ParseActivity::class.java)
-            intent.putExtra("USERS_LIST", dataSend)
-            intent.putExtra("USERS_LIST_SIZE", dataSize)
-            startActivity(intent)
-        }
-    }
 }
 

@@ -9,7 +9,7 @@ import com.incaze.friendscheckervk.feed.adapter.ParseAdapter
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.feed.adapter.Adapter
 import com.incaze.friendscheckervk.model.VKUser
-import com.incaze.friendscheckervk.util.DBHelper
+import com.incaze.friendscheckervk.database.DBHelper
 
 class ParseFeed : ParseAdapter() {
 

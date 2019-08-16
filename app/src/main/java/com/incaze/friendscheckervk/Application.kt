@@ -1,11 +1,10 @@
 package com.incaze.friendscheckervk
 
 import android.app.Application
-import com.incaze.friendscheckervk.util.ShowToast
+import com.incaze.friendscheckervk.util.Toast
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKTokenExpiredHandler
 
-/* is never used? */
 class Application: Application() {
 
     override fun onCreate() {
@@ -14,10 +13,9 @@ class Application: Application() {
         VK.addTokenExpiredHandler(tokenTracker)
     }
 
-
     private val tokenTracker = object: VKTokenExpiredHandler {
         override fun onTokenExpired() {
-            val toast = ShowToast()
+            val toast = Toast()
             toast.showToast(applicationContext, "Токен истек, требуется повторная авторизация")
         }
     }

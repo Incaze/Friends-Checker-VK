@@ -14,14 +14,14 @@ import com.incaze.friendscheckervk.model.VKUser
 import android.content.Intent
 import android.net.Uri
 import com.incaze.friendscheckervk.feed.adapter.Adapter
-import com.incaze.friendscheckervk.util.DBHelper
+import com.incaze.friendscheckervk.database.DBHelper
 
 
 class MainFeed : MainAdapter() {
 
     fun addUser(users: VKUser?) {
         this.users.add(users!!)
-        notifyItemChanged(getItemCount() - 1)
+        notifyItemChanged(itemCount - 1)
     }
 
     fun deleteUser(pos: Int) {
@@ -38,6 +38,13 @@ class MainFeed : MainAdapter() {
         notifyDataSetChanged()
     }
 
+    fun returnListOfUsersId() : MutableList<String>{
+        val result : MutableList<String> = arrayListOf()
+        for (i in 0 until users.size){
+            result.add(users[i].id)
+        }
+        return result
+    }
 
     override fun setup(activity: Activity, adapter: Adapter<ViewHolder>, dbHelper: DBHelper?) {
         val recyclerView = activity.findViewById<RecyclerView>(R.id.activity_main_rv_users)

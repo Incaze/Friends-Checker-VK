@@ -8,10 +8,12 @@ import com.incaze.friendscheckervk.feed.ParseFeed
 import com.incaze.friendscheckervk.request.execute.GetFriendlistExecute
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
+import com.incaze.friendscheckervk.util.ActivityOnClick
 
 class ParseActivity : AppCompatActivity() {
 
     private var parseAdapter = ParseFeed()
+    private val onClick = ActivityOnClick(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +51,11 @@ class ParseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.go_back -> {
-                backToMainActivity()
+                onClick.backToMainActivity()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun backToMainActivity()
-    {
-        super.onBackPressed()
     }
 
 }

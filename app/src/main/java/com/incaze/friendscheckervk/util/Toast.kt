@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.Toast
 
-class ShowToast {
+class Toast {
     fun showToast(context: Context, text: String) {
         val toast = Toast.makeText(
             context,

@@ -8,6 +8,7 @@ import com.incaze.friendscheckervk.feed.ParseFeed
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
 import com.incaze.friendscheckervk.request.GetFriendlistRequest
+import com.incaze.friendscheckervk.util.Toast
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.api.sdk.exceptions.VKApiExecutionException
@@ -20,6 +21,7 @@ class GetFriendlistExecute {
 
     fun executeRequest(idArray: ArrayList<Int>, size: Int, parseAdapter : ParseFeed, activity : Activity) {
         var key = 0
+        var firstExecuting = true
         val bar = activity.findViewById<ProgressBar>(R.id.progress_parse)
         bar.visibility = View.VISIBLE
         bar.max = size
@@ -27,13 +29,11 @@ class GetFriendlistExecute {
         for (i in 0 until size) {
             VK.execute(GetFriendlistRequest(idArray[i]), object : VKApiCallback<List<VKUser>> {
                 override fun success(result: List<VKUser>) {
+                    if (firstExecuting) {
+                        parseAdapter.addListOfUsers(result)
+                        firstExecuting = false
+                    }
                     when (key){
-                        0 -> {
-                            parseAdapter.addListOfUsers(result)
-                            if (key == size - 1) {
-                                finishOfExecute(parseAdapter, activity, bar)
-                            }
-                        }
                         (size - 1) -> {
                             parseAdapter.retainListOfUsers(result)
                             finishOfExecute(parseAdapter, activity, bar)
@@ -47,7 +47,8 @@ class GetFriendlistExecute {
                 }
                 override fun fail(error: VKApiExecutionException) {
                     Log.e(errorTAG, error.toString())
-
+                    val toast = Toast()
+                    toast.showToast(activity, "Произошла ошибка при загрузке данных")
                 }
             })
         }

@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.incaze.friendscheckervk.R
 import com.incaze.friendscheckervk.model.VKUser
-import com.incaze.friendscheckervk.util.DBHelper
-import com.incaze.friendscheckervk.util.ShowToast
+import com.incaze.friendscheckervk.database.DBHelper
+import com.incaze.friendscheckervk.util.Toast
 
 @Suppress("UNCHECKED_CAST")
 abstract class Adapter<VH : RecyclerView.ViewHolder>:  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -54,7 +54,7 @@ abstract class Adapter<VH : RecyclerView.ViewHolder>:  RecyclerView.Adapter<Recy
                 onItemClick?.invoke(users[adapterPosition])
             }
             errorUser.setOnClickListener{
-                val toast = ShowToast()
+                val toast = Toast()
                 toast.showToast(it.context, it.resources.getString(R.string.error_user))
             }
         }
@@ -67,14 +67,6 @@ abstract class Adapter<VH : RecyclerView.ViewHolder>:  RecyclerView.Adapter<Recy
 
     fun returnListOfUsers() : MutableList<VKUser>{
         return users
-    }
-
-    fun returnListOfUsersId() : MutableList<String>{
-        val result : MutableList<String> = arrayListOf()
-        for (i in 0 until users.size){
-            result.add(users[i].id)
-        }
-        return result
     }
 
     fun addListOfUsers(users: List<VKUser>){
